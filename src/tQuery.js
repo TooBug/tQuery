@@ -145,6 +145,35 @@
 
 	};
 
+	// 获取原生对象，如果index为空则返回DOM数组
+	tQuery.prototype.get = function(index){
+
+		var index = parseInt(index,10);
+
+		if(helper.isNumber(index)){
+
+			if(index >= 0){
+
+				return this[index];
+
+			}else{
+
+				return this[this.length + index];
+
+			}
+
+		}else{
+
+			return Array.prototype.map.call(this,function(domItem){
+
+				return domItem;
+
+			});
+
+		}
+
+	};
+
 	// 辅助方法，私有
 	var helper = {};
 
@@ -162,6 +191,13 @@
 
 	};
 
+	// 是否是数字
+	helper.isNumber = function(target){
+
+		return !isNaN(target);
+
+	};
+
 	// 是否是数组
 	helper.isArray = function(target){
 
@@ -169,6 +205,7 @@
 
 	};
 
+	// 是否是tQuery对象
 	helper.istQueryObject = function(target){
 
 		return target._tQuery;
@@ -183,6 +220,7 @@
 				!helper.istQueryObject(target);
 
 	};
+
 
 	window.tQuery = window.$ = tQuery;
 

@@ -44,6 +44,7 @@
 				}else{	// 选择器
 
 					tQuery.extend(this,document.querySelectorAll(selector));
+					this.selector = selector;
 
 				}
 

@@ -21,7 +21,7 @@
 
 		// 如果不是以构造函数运行，则强制返回一个新实例
 		// 即 tQuery() 等价于 new tQuery()
-		if(!this instanceof tQuery){
+		if(!(this instanceof tQuery)){
 
 			return new tQuery(selector);
 

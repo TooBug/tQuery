@@ -146,6 +146,24 @@
 
 	};
 
+	// tQuery对象中的DOM遍历
+	tQuery.each = function(domList,callback){
+
+		Array.prototype.forEach.call(domList,function(domItem,index){
+
+			callback.call(domItem,index,domItem);
+
+		});
+
+	};
+
+	// tQuery原型中的each方法
+	tQuery.prototype.each = function(callback){
+
+		tQuery.each(this,callback);
+
+	};
+
 	// 获取原生对象，如果index为空则返回DOM数组
 	tQuery.prototype.get = function(index){
 
@@ -184,7 +202,9 @@
 
 		}else{
 
-			this[0].innerHTML = htmlStr;
+			this.each(function(){
+				this.innerHTML = htmlStr;
+			})
 			return this;
 
 		}
@@ -200,10 +220,34 @@
 
 		}else{
 
-			this[0].innerText = textStr;
+			this.each(function(){
+				this.innerText = textStr;
+			})
 			return this;
 
 		}
+
+	};
+
+	// 显示DOM
+	tQuery.prototype.show = function(){
+
+		this.each(function(){
+
+			this.style.display = '';
+
+		});
+
+	};
+
+	// 隐藏DOM
+	tQuery.prototype.hide = function(){
+
+		this.each(function(){
+
+			this.style.display = 'none';
+
+		});
 
 	};
 

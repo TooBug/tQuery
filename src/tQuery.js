@@ -202,7 +202,9 @@
 
 		}else{
 
-			this[0].innerHTML = htmlStr;
+			this.each(function(){
+				this.innerHTML = htmlStr;
+			})
 			return this;
 
 		}
@@ -218,7 +220,9 @@
 
 		}else{
 
-			this[0].innerText = textStr;
+			this.each(function(){
+				this.innerText = textStr;
+			})
 			return this;
 
 		}

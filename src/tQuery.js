@@ -16,6 +16,7 @@
 	// 存储window.$以便后续可以用noConfict解救出来
 	var _$ = window.$;
 
+	/********************* Core Start *********************/
 	// tQuery主函数，参数为选择器
 	var tQuery = function(selector){
 
@@ -28,6 +29,7 @@
 		}
 
 		var ifHTMLStrReg = /</;	// 用来判断选择器字符串是否是DOM字符串
+		var ifHTMLElementReg = /Element$/;	// 判断一个对象是否是DOM节点
 
 		this.length = 0; // tQuery对象的length属性
 		this._tQuery = true; // 用于标识是否tQuery对象
@@ -48,11 +50,48 @@
 
 				}
 
+			// DOM列表
+			case 'object':
+
+				if(selector.type === 'NodeList'){	// 自定义的NodeList对象
+
+					var tempObj = {
+
+						length:selector.length
+
+					};
+
+					selector.nodeList.forEach(function(node,index){
+
+						tempObj[index] = node;
+
+					});
+
+					tQuery.extend(this,tempObj);
+
+				}else if(selector.constructor.name === 'NodeList'){	// DOM NodeList
+
+					tQuery.extend(this,selector);
+
+				}else if(ifHTMLElementReg.test(selector.constructor.name)){	// DOM节点
+
+					tQuery.extend(this,{
+						'0':selector,
+						length:1
+					});
+
+				}
+
 				break;
 
 		}
 
 	};
+
+	/********************** Core End **********************/
+
+
+	/****************** Core Method Start *****************/
 
 	// 复制对象属性
 	// isDeep可选，target之后可以跟无限多个被复制属性的对象
@@ -155,14 +194,22 @@
 
 		});
 
+		return domList;
+
 	};
 
+	
 	// tQuery原型中的each方法
 	tQuery.prototype.each = function(callback){
 
-		tQuery.each(this,callback);
+		return tQuery.each(this,callback);
 
 	};
+
+	/******************* Core Method End ******************/
+
+
+	/********************** DOM Start *********************/
 
 	// 获取原生对象，如果index为空则返回DOM数组
 	tQuery.prototype.get = function(index){
@@ -190,6 +237,33 @@
 			});
 
 		}
+
+	};
+
+	// 获取所有的父（祖先）元素
+	tQuery.prototype.parent = function(){
+
+		var parentSet = {
+
+			type:'NodeList',
+			nodeList:[],
+			length:0
+
+		};
+
+		this.each(function(){
+
+			if(this.parentNode && Array.prototype.indexOf.call(parentSet,this) === -1){
+
+				parentSet.nodeList.push(this.parentNode);
+				parentSet.length ++;
+
+			}
+
+
+		});
+
+		return tQuery(parentSet);
 
 	};
 
@@ -232,7 +306,7 @@
 	// 显示DOM
 	tQuery.prototype.show = function(){
 
-		this.each(function(){
+		return this.each(function(){
 
 			this.style.display = '';
 
@@ -243,13 +317,18 @@
 	// 隐藏DOM
 	tQuery.prototype.hide = function(){
 
-		this.each(function(){
+		return this.each(function(){
 
 			this.style.display = 'none';
 
 		});
 
 	};
+
+	/*********************** DOM End **********************/
+
+
+	/********************* Helper Start *******************/
 
 	// 辅助方法，私有
 	var helper = {};
@@ -282,6 +361,13 @@
 
 	};
 
+	// 是否是函数
+	helper.isFunction = function(target){
+
+		return typeof target === 'function';
+
+	};
+
 	// 是否是tQuery对象
 	helper.istQueryObject = function(target){
 
@@ -297,6 +383,8 @@
 				!helper.istQueryObject(target);
 
 	};
+
+	/******************* Helper end ******************/
 
 
 	window.tQuery = window.$ = tQuery;

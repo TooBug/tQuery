@@ -43,7 +43,7 @@
 
 				}else{	// 选择器
 
-					// return 
+					tQuery.extend(this,document.querySelectorAll(selector));
 
 				}
 

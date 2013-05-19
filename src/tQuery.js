@@ -175,6 +175,38 @@
 
 	};
 
+	// 获取或者改写DOM的HTML
+	tQuery.prototype.html = function(htmlStr){
+
+		if(typeof htmlStr === 'undefined'){
+
+			return this[0].innerHTML;
+
+		}else{
+
+			this[0].innerHTML = htmlStr;
+			return this;
+
+		}
+
+	};
+
+	// 获取或者改写DOM的Text
+	tQuery.prototype.text = function(textStr){
+
+		if(typeof textStr === 'undefined'){
+
+			return this[0].innerText;
+
+		}else{
+
+			this[0].innerText = textStr;
+			return this;
+
+		}
+
+	};
+
 	// 辅助方法，私有
 	var helper = {};
 

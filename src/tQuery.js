@@ -17,6 +17,9 @@
 	var _$ = window.$;
 
 	/********************* Core Start *********************/
+
+	var eventList = [];
+
 	// tQuery主函数，参数为选择器
 	var tQuery = function(selector){
 
@@ -390,6 +393,127 @@
 	};
 
 	/*********************** DOM End **********************/
+
+
+	/********************* Event Start ********************/
+
+	// 绑定事件
+	tQuery.prototype.on = function(events,selector,data,handler){
+
+		if(helper.isPlainObject(events)){
+
+			for(var event in events){
+
+				this.on(event,selector,data,handler);
+
+			}
+
+			return this;
+
+		}
+
+
+		var eventArr = events.split(' ');
+
+		if(typeof handler === 'undefined'){
+
+			if(helper.isString(selector)){
+
+				// on(events,selector,handler)
+				handler = data;
+				data = undefined;
+
+			}else if(helper.isFunction(data)){
+
+				// on(events,data,handler)
+				handler = data;
+				data = selector;
+				selector = undefined;
+
+			}else{
+
+				// on(events,handler)
+				handler = selector;
+				data = selector = undefined;
+
+			}
+
+		}
+
+
+		// 绑定事件
+		this.each(function(){
+
+			var dom = this;
+
+			eventArr.forEach(function(eventItem){
+
+				// 事件类型可以加命名空间，比如click.login
+				// 然后off时直接加上命名空间，可以不影响其它click事件
+				var namespaceArr = eventItem.split('.');
+
+				dom.addEventListener(namespaceArr[0],function(e){
+
+					var eventObj = {
+
+						type:e.type,
+						preventDefault:e.preventDefault,
+						stopPropagation:e.stopPropagation,
+						target:e.target,
+						data:data,
+						originalEvent:e
+
+					};
+
+					var thisDom = dom;
+
+					if(selector){
+
+						// 检查是否符合代理的条件
+						var delegatedDomList = thisDom.querySelectorAll(selector);
+
+						if(!delegatedDomList.length) return;
+
+						Array.prototype.forEach.call(delegatedDomList,function(delegatedDomItem){
+
+							var allParentNodes = tQuery(e.target).parents().add(e.target);
+							if(Array.prototype.indexOf.call(allParentNodes,delegatedDomItem) !== -1){
+
+								thisDom = delegatedDomItem;
+
+							}
+
+						});
+
+					}
+
+					var returnValue = handler.call(thisDom,eventObj);
+
+					if(returnValue === false){
+
+						e.preventDefault();
+						e.stopPropagation();
+
+					}
+
+				},false);
+
+				eventList.push({
+
+					dom:dom,
+					handler:handler,
+					namespace:namespaceArr.slice(1)
+
+				});
+
+			});			
+
+		});
+
+
+	};
+
+	/********************** Event End *********************/
 
 
 	/********************* Helper Start *******************/

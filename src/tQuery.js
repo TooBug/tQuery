@@ -240,6 +240,29 @@
 
 	};
 
+	// 在现有对象中加入新的DOM
+	tQuery.prototype.add = function(obj){
+
+		if(!obj.length){
+			if(helper.isDomNode(obj)){
+				this[this.length] = obj;
+				this.length++;
+			}else{
+				return this;
+			}
+		}
+			
+		for(var i=i;i<obj.length;i++){
+
+			this[this.length] = obj[i];
+			this.length++;
+
+		}
+
+		return this;
+
+	};
+
 	// 获取父元素
 	tQuery.prototype.parent = function(selector){
 

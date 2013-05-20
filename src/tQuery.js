@@ -185,6 +185,7 @@
 
 	};
 
+
 	// tQuery对象中的DOM遍历
 	tQuery.each = function(domList,callback){
 
@@ -240,8 +241,8 @@
 
 	};
 
-	// 获取所有的父（祖先）元素
-	tQuery.prototype.parent = function(){
+	// 获取父元素
+	tQuery.prototype.parent = function(selector){
 
 		var parentSet = {
 
@@ -251,12 +252,53 @@
 
 		};
 
+		var allSelectorDom = document.querySelectorAll(selector);
+
 		this.each(function(){
 
-			if(this.parentNode && Array.prototype.indexOf.call(parentSet,this) === -1){
+			if(this.parentNode &&
+					Array.prototype.indexOf.call(parentSet.nodeList,this.parentNode) === -1 &&
+					(!selector || Array.prototype.indexOf.call(allSelectorDom,this.parentNode) !== -1)){
 
 				parentSet.nodeList.push(this.parentNode);
 				parentSet.length ++;
+
+			}
+
+
+		});
+
+		return tQuery(parentSet);
+
+	};
+
+	// 获取所有的父（祖先）元素
+	tQuery.prototype.parents = function(selector){
+
+		var parentSet = {
+
+			type:'NodeList',
+			nodeList:[],
+			length:0
+
+		};
+
+		var allSelectorDom = document.querySelectorAll(selector);
+
+		this.each(function(){
+
+			var currdom = this.parentNode;
+
+			while(currdom){
+
+				if(Array.prototype.indexOf.call(parentSet.nodeList,currdom) === -1 &&
+						(!selector || Array.prototype.indexOf.call(allSelectorDom,currdom) !== -1)){
+
+					parentSet.nodeList.push(currdom);
+					parentSet.length ++;
+				}
+
+				currdom = currdom.parentNode;
 
 			}
 

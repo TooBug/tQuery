@@ -29,7 +29,6 @@
 		}
 
 		var ifHTMLStrReg = /</;	// 用来判断选择器字符串是否是DOM字符串
-		var ifHTMLElementReg = /Element$/;	// 判断一个对象是否是DOM节点
 
 		this.length = 0; // tQuery对象的length属性
 		this._tQuery = true; // 用于标识是否tQuery对象
@@ -69,11 +68,11 @@
 
 					tQuery.extend(this,tempObj);
 
-				}else if(selector.constructor.name === 'NodeList'){	// DOM NodeList
+				}else if(helper.isDomList(selector)){	// DOM NodeList
 
 					tQuery.extend(this,selector);
 
-				}else if(ifHTMLElementReg.test(selector.constructor.name)){	// DOM节点
+				}else if(helper.isDomNode(selector)){	// DOM节点
 
 					tQuery.extend(this,{
 						'0':selector,
@@ -423,6 +422,21 @@
 		return typeof target === 'object' &&
 				!helper.isArray(target) &&
 				!helper.istQueryObject(target);
+
+	};
+
+	// 是否是DOM节点
+	helper.isDomNode = function(target){
+
+		var ifHTMLElementReg = /Element$/;	// 判断一个对象是否是DOM节点
+		return ifHTMLElementReg.test(target.constructor.name);
+
+	};
+
+	// 是否是DOM节点列表
+	helper.isDomList = function(target){
+
+		return target.constructor.name === 'NodeList';
 
 	};
 

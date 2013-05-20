@@ -9,12 +9,16 @@
 *
 **/
 
-(function(){
+(function(window){
 
 	'use strict';
 
 	// 存储window.$以便后续可以用noConfict解救出来
 	var _$ = window.$;
+
+	/********************* Core Start *********************/
+
+	var eventList = [];
 
 	// tQuery主函数，参数为选择器
 	var tQuery = function(selector){
@@ -48,11 +52,48 @@
 
 				}
 
+			// DOM列表
+			case 'object':
+
+				if(selector.type === 'NodeList'){	// 自定义的NodeList对象
+
+					var tempObj = {
+
+						length:selector.length
+
+					};
+
+					selector.nodeList.forEach(function(node,index){
+
+						tempObj[index] = node;
+
+					});
+
+					tQuery.extend(this,tempObj);
+
+				}else if(helper.isDomList(selector)){	// DOM NodeList
+
+					tQuery.extend(this,selector);
+
+				}else if(helper.isDomNode(selector)){	// DOM节点
+
+					tQuery.extend(this,{
+						'0':selector,
+						length:1
+					});
+
+				}
+
 				break;
 
 		}
 
 	};
+
+	/********************** Core End **********************/
+
+
+	/****************** Core Method Start *****************/
 
 	// 复制对象属性
 	// isDeep可选，target之后可以跟无限多个被复制属性的对象
@@ -146,6 +187,7 @@
 
 	};
 
+
 	// tQuery对象中的DOM遍历
 	tQuery.each = function(domList,callback){
 
@@ -155,14 +197,22 @@
 
 		});
 
+		return domList;
+
 	};
 
+	
 	// tQuery原型中的each方法
 	tQuery.prototype.each = function(callback){
 
-		tQuery.each(this,callback);
+		return tQuery.each(this,callback);
 
 	};
+
+	/******************* Core Method End ******************/
+
+
+	/********************** DOM Start *********************/
 
 	// 获取原生对象，如果index为空则返回DOM数组
 	tQuery.prototype.get = function(index){
@@ -190,6 +240,97 @@
 			});
 
 		}
+
+	};
+
+	// 在现有对象中加入新的DOM
+	tQuery.prototype.add = function(obj){
+
+		if(!obj.length){
+			if(helper.isDomNode(obj)){
+				this[this.length] = obj;
+				this.length++;
+			}else{
+				return this;
+			}
+		}
+			
+		for(var i=i;i<obj.length;i++){
+
+			this[this.length] = obj[i];
+			this.length++;
+
+		}
+
+		return this;
+
+	};
+
+	// 获取父元素
+	tQuery.prototype.parent = function(selector){
+
+		var parentSet = {
+
+			type:'NodeList',
+			nodeList:[],
+			length:0
+
+		};
+
+		var allSelectorDom = document.querySelectorAll(selector);
+
+		this.each(function(){
+
+			if(this.parentNode &&
+					Array.prototype.indexOf.call(parentSet.nodeList,this.parentNode) === -1 &&
+					(!selector || Array.prototype.indexOf.call(allSelectorDom,this.parentNode) !== -1)){
+
+				parentSet.nodeList.push(this.parentNode);
+				parentSet.length ++;
+
+			}
+
+
+		});
+
+		return tQuery(parentSet);
+
+	};
+
+	// 获取所有的父（祖先）元素
+	tQuery.prototype.parents = function(selector){
+
+		var parentSet = {
+
+			type:'NodeList',
+			nodeList:[],
+			length:0
+
+		};
+
+		var allSelectorDom = document.querySelectorAll(selector);
+
+		this.each(function(){
+
+			var currdom = this.parentNode;
+
+			while(currdom){
+
+				if(Array.prototype.indexOf.call(parentSet.nodeList,currdom) === -1 &&
+						(!selector || Array.prototype.indexOf.call(allSelectorDom,currdom) !== -1)){
+
+					parentSet.nodeList.push(currdom);
+					parentSet.length ++;
+				}
+
+				currdom = currdom.parentNode;
+
+			}
+
+
+		});
+
+		return tQuery(parentSet);
 
 	};
 
@@ -232,7 +373,7 @@
 	// 显示DOM
 	tQuery.prototype.show = function(){
 
-		this.each(function(){
+		return this.each(function(){
 
 			this.style.display = '';
 
@@ -243,13 +384,139 @@
 	// 隐藏DOM
 	tQuery.prototype.hide = function(){
 
-		this.each(function(){
+		return this.each(function(){
 
 			this.style.display = 'none';
 
 		});
 
 	};
+
+	/*********************** DOM End **********************/
+
+
+	/********************* Event Start ********************/
+
+	// 绑定事件
+	tQuery.prototype.on = function(events,selector,data,handler){
+
+		if(helper.isPlainObject(events)){
+
+			for(var event in events){
+
+				this.on(event,selector,data,handler);
+
+			}
+
+			return this;
+
+		}
+
+
+		var eventArr = events.split(' ');
+
+		if(typeof handler === 'undefined'){
+
+			if(helper.isString(selector)){
+
+				// on(events,selector,handler)
+				handler = data;
+				data = undefined;
+
+			}else if(helper.isFunction(data)){
+
+				// on(events,data,handler)
+				handler = data;
+				data = selector;
+				selector = undefined;
+
+			}else{
+
+				// on(events,handler)
+				handler = selector;
+				data = selector = undefined;
+
+			}
+
+		}
+
+
+		// 绑定事件
+		this.each(function(){
+
+			var dom = this;
+
+			eventArr.forEach(function(eventItem){
+
+				// 事件类型可以加命名空间，比如click.login
+				// 然后off时直接加上命名空间，可以不影响其它click事件
+				var namespaceArr = eventItem.split('.');
+
+				dom.addEventListener(namespaceArr[0],function(e){
+
+					var eventObj = {
+
+						type:e.type,
+						preventDefault:e.preventDefault,
+						stopPropagation:e.stopPropagation,
+						target:e.target,
+						data:data,
+						originalEvent:e
+
+					};
+
+					var thisDom = dom;
+
+					if(selector){
+
+						// 检查是否符合代理的条件
+						var delegatedDomList = thisDom.querySelectorAll(selector);
+
+						if(!delegatedDomList.length) return;
+
+						Array.prototype.forEach.call(delegatedDomList,function(delegatedDomItem){
+
+							var allParentNodes = tQuery(e.target).parents().add(e.target);
+							if(Array.prototype.indexOf.call(allParentNodes,delegatedDomItem) !== -1){
+
+								thisDom = delegatedDomItem;
+
+							}
+
+						});
+
+					}
+
+					var returnValue = handler.call(thisDom,eventObj);
+
+					if(returnValue === false){
+
+						e.preventDefault();
+						e.stopPropagation();
+
+					}
+
+				},false);
+
+				eventList.push({
+
+					dom:dom,
+					handler:handler,
+					namespace:namespaceArr.slice(1)
+
+				});
+
+			});			
+
+		});
+
+
+	};
+
+	/********************** Event End *********************/
+
+
+	/********************* Helper Start *******************/
 
 	// 辅助方法，私有
 	var helper = {};
@@ -282,6 +549,13 @@
 
 	};
 
+	// 是否是函数
+	helper.isFunction = function(target){
+
+		return typeof target === 'function';
+
+	};
+
 	// 是否是tQuery对象
 	helper.istQueryObject = function(target){
 
@@ -297,6 +571,23 @@
 				!helper.istQueryObject(target);
 
 	};
+
+	// 是否是DOM节点
+	helper.isDomNode = function(target){
+
+		var ifHTMLElementReg = /Element$/;	// 判断一个对象是否是DOM节点
+		return ifHTMLElementReg.test(target.constructor.name);
+
+	};
+
+	// 是否是DOM节点列表
+	helper.isDomList = function(target){
+
+		return target.constructor.name === 'NodeList';
+
+	};
+
+	/******************* Helper end ******************/
 
 
 	window.tQuery = window.$ = tQuery;

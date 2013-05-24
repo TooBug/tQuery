@@ -22,3 +22,53 @@ test('tQuery函数测试',function(){
 	ok(tQuery({}).length === 1,'对象');
 
 });
+
+test('$.extend函数测试',function(){
+
+	// 扩展到tQuery对象上
+	$.extend({testExtend:'ok'});
+
+	ok(tQuery.testExtend === 'ok','扩展到tQuery对象上');
+	
+	// 测试数组与对象复制
+	var test1 = {
+			a:1,
+			b:2
+		},
+		test2 = {
+			a:21,
+			b:22
+		},
+		test3 = {
+			a:3,
+			c:{
+				a:1,
+				b:[1,2,3]
+			},
+			d:[1,2,3]
+		};
+
+	$.extend(test1,test3);
+	$.extend(true,test2,test3);
+
+	ok(typeof test1.c === 'object','浅复制对象');
+	ok(Array.isArray(test1.d),'浅复制数组');
+	ok(typeof test2.c === 'object','深复制对象');
+	ok(Array.isArray(test2.d),'深复制数组');
+
+	// 测试深浅复制的不同影响
+
+	test3.d.push(222);
+	test1.c.a = 3;
+
+	ok(test1.d.length === 4,'浅复制数组修改');
+	ok(test1.c.a === 3,'浅复制对象修改');
+	ok(test2.d.length === 3,'深复制数组修改');
+	ok(test2.c.a === 1,'深复制对象修改');
+
+
+
+});
+
+
+

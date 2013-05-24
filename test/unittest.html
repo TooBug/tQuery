@@ -10,22 +10,4 @@
 <body>
 <div id="qunit"></div>
 </body>
-<script>
-
-~function(){
-
-	var a={a:1,b:2},b={a:21,b:22},c={a:3,c:{a:1,b:[1,2,3]},d:[1,2,3]};
-
-	$.extend(a,c);
-
-	$.extend(true,b,c)
-
-	c.d.push(222);
-	a.c.a=3;
-	console.log(a,b,c);
-
-}();
-
-
-</script>
 </html>

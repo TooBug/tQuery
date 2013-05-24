@@ -17,7 +17,8 @@ test('tQuery函数测试',function(){
 	ok(tQuery('body').length === 1,'字符串选择器');
 	ok(tQuery(document.body).length === 1,'body对象选择器');
 	ok(tQuery(window).length === 1,'window对象选择器');
-	ok(tQuery([]).length === 0,'数组');
+	ok(tQuery([]).length === 0,'空数组');
+	ok(tQuery([1,2,3]).length === 3,'非空数组');
 	ok(tQuery({}).length === 1,'对象');
 
 });

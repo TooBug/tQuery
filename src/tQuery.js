@@ -89,6 +89,22 @@
 						length:1
 					});
 
+				}else if(helper.isArray(selector)){	// 数组
+
+					var tempObj = {
+
+						length:selector.length
+
+					}
+
+					selector.forEach(function(arrElement,index){
+
+						tempObj[index] = arrElement;
+
+					});
+
+					tQuery.extend(this,tempObj);
+
 				}
 
 				break;

@@ -75,7 +75,14 @@
 
 					tQuery.extend(this,selector);
 
-				}else if(helper.isDomNode(selector)){	// DOM节点
+				}else if(helper.isDomNode(selector) || selector === window){	// DOM节点或者window
+
+					tQuery.extend(this,{
+						'0':selector,
+						length:1
+					});
+
+				}else if(helper.isPlainObject(selector)){	// 普通对象
 
 					tQuery.extend(this,{
 						'0':selector,
@@ -589,6 +596,8 @@
 
 	/******************* Helper end ******************/
 
+	// 设置原型
+	tQuery.fn = tQuery.prototype;
 
 	window.tQuery = window.$ = tQuery;
 

@@ -19,6 +19,16 @@
 	/********************* Core Start *********************/
 
 	var eventList = [];
+	// var readyList = [];
+	var isReady = false;
+
+	if(document.readyState === 'complete'){
+		isReady = true;
+	}else{
+		document.addEventListener('DOMContentLoaded',function(){
+			isReady = true;
+		},false);
+	}
 
 	// tQuery主函数，参数为选择器
 	var tQuery = function(selector){
@@ -106,6 +116,13 @@
 					tQuery.extend(this,tempObj);
 
 				}
+
+				break;
+
+			// DOM Ready
+			case 'function':
+
+				tQuery().ready(selector);
 
 				break;
 
@@ -246,6 +263,23 @@
 	tQuery.prototype.each = function(callback){
 
 		return tQuery.each(this,callback);
+
+	};
+
+	// DOM Ready
+	tQuery.prototype.ready = function(func){
+
+		if((typeof this[0] !== 'undefined' && this[0] !== document) || !helper.isFunction(func)){
+			return this;
+		}
+
+		if(isReady){
+			func();
+		}else{
+			document.addEventListener('DOMContentLoaded',func,false);
+		}
+
+		return this;
 
 	};
 

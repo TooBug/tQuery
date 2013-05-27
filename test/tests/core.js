@@ -130,3 +130,36 @@ test('$.each函数测试',function(){
 
 });
 
+asyncTest('DOM Ready测试',function(){
+
+	var count = 0;
+
+	tQuery().ready(function(){
+		count++;
+		ok(count === 1,'空对象');
+		start();
+	});
+
+	tQuery(document).ready(function(){
+		count++;
+		ok(count === 2,'document.ready');
+	});
+
+	tQuery(function(){
+		count++;
+		ok(count === 3,'直接传函数');
+		stop();
+	});
+
+	setTimeout(function(){
+		tQuery(function(){
+
+			count++;
+			ok(count === 4,'延时执行');
+			start();
+			
+		});
+	},200);
+
+});
+

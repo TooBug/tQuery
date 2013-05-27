@@ -70,5 +70,63 @@ test('$.extend函数测试',function(){
 
 });
 
+test('$.each函数测试',function(){
 
+	var test_this;
+	var test_index;
+	var test_domItem;
+	var domList = $('body');
+	var arrayList = $([11,22,33]);
+	var plainArray = [21,22,23];
+	var plainObject = {a:1,b:2};
+
+	$.each(domList,function(index,domItem){
+
+		test_this = this;
+		test_index = index;
+		test_domItem = domItem;
+
+	});
+
+	ok(test_this === document.body,'DOM元素this指向测试');
+	ok(test_index === 0,'DOM元素index指向测试');
+	ok(test_domItem === document.body,'DOM元素each中元素指向测试');
+
+	$.each(arrayList,function(index,domItem){
+
+		test_this = this;
+		test_index = index;
+		test_domItem = domItem;
+
+	});
+
+	ok(test_this.constructor === Number,'数组this指向测试');
+	ok(test_index === 2,'数组index指向测试');
+	ok(test_domItem === 33,'数组each中元素指向测试');
+
+	$.each(plainArray,function(index,domItem){
+
+		test_this = this;
+		test_index = index;
+		test_domItem = domItem;
+
+	});
+
+	ok(test_this.constructor === Number,'纯数组this指向测试');
+	ok(test_index === 2,'纯数组index指向测试');
+	ok(test_domItem === 23,'纯数组each中元素指向测试');
+
+
+	$.each(plainObject,function(key,val){
+
+		test_index = key;
+		test_domItem = val;
+
+	});
+
+	ok(test_index === 'b','纯对象key指向测试');
+	ok(test_domItem === 2,'纯对象value中元素指向测试');
+
+
+});
 

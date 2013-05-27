@@ -214,11 +214,28 @@
 	// tQuery对象中的DOM遍历
 	tQuery.each = function(domList,callback){
 
-		Array.prototype.forEach.call(domList,function(domItem,index){
+		if(helper.isPlainObject(domList)){	// 纯对象，则遍历key和value传递给callback
 
-			callback.call(domItem,index,domItem);
+			for(var key in domList){
 
-		});
+				if(domList.hasOwnProperty(key)){
+
+					callback.call(domList[key],key,domList[key]);
+
+				}
+
+			}
+
+		}else{	// 否则，像数组一样遍历
+
+			Array.prototype.forEach.call(domList,function(domItem,index){
+
+				callback.call(domItem,index,domItem);
+
+			});	
+
+		}
+
 
 		return domList;
 

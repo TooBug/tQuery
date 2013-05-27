@@ -258,6 +258,22 @@
 
 	};
 
+	// 解析JSON
+	tQuery.parseJSON = function(jsonStr){
+
+		return JSON.parse(jsonStr);
+
+	};
+
+	// 当前时间
+	tQuery.now = function(){
+
+		return Date.now();
+
+	};
+
+	// 空方法
+	tQuery.noop = function(){};
 	
 	// tQuery原型中的each方法
 	tQuery.prototype.each = function(callback){

@@ -19,6 +19,16 @@
 	/********************* Core Start *********************/
 
 	var eventList = [];
+	// var readyList = [];
+	var isReady = false;
+
+	if(document.readyState === 'complete'){
+		isReady = true;
+	}else{
+		document.addEventListener('DOMContentLoaded',function(){
+			isReady = true;
+		},false);
+	}
 
 	// tQuery主函数，参数为选择器
 	var tQuery = function(selector){
@@ -75,14 +85,44 @@
 
 					tQuery.extend(this,selector);
 
-				}else if(helper.isDomNode(selector)){	// DOM节点
+				}else if(helper.isDomNode(selector) || selector === window){	// DOM节点或者window
 
 					tQuery.extend(this,{
 						'0':selector,
 						length:1
 					});
 
+				}else if(helper.isPlainObject(selector)){	// 普通对象
+
+					tQuery.extend(this,{
+						'0':selector,
+						length:1
+					});
+
+				}else if(helper.isArray(selector)){	// 数组
+
+					var tempObj = {
+
+						length:selector.length
+
+					}
+
+					selector.forEach(function(arrElement,index){
+
+						tempObj[index] = arrElement;
+
+					});
+
+					tQuery.extend(this,tempObj);
+
 				}
+
+				break;
+
+			// DOM Ready
+			case 'function':
+
+				tQuery().ready(selector);
 
 				break;
 
@@ -191,21 +231,71 @@
 	// tQuery对象中的DOM遍历
 	tQuery.each = function(domList,callback){
 
-		Array.prototype.forEach.call(domList,function(domItem,index){
+		if(helper.isPlainObject(domList)){	// 纯对象，则遍历key和value传递给callback
 
-			callback.call(domItem,index,domItem);
+			for(var key in domList){
 
-		});
+				if(domList.hasOwnProperty(key)){
+
+					callback.call(domList[key],key,domList[key]);
+
+				}
+
+			}
+
+		}else{	// 否则，像数组一样遍历
+
+			Array.prototype.forEach.call(domList,function(domItem,index){
+
+				callback.call(domItem,index,domItem);
+
+			});	
+
+		}
+
 
 		return domList;
 
 	};
 
+	// 解析JSON
+	tQuery.parseJSON = function(jsonStr){
+
+		return JSON.parse(jsonStr);
+
+	};
+
+	// 当前时间
+	tQuery.now = function(){
+
+		return Date.now();
+
+	};
+
+	// 空方法
+	tQuery.noop = function(){};
 	
 	// tQuery原型中的each方法
 	tQuery.prototype.each = function(callback){
 
 		return tQuery.each(this,callback);
+
+	};
+
+	// DOM Ready
+	tQuery.prototype.ready = function(func){
+
+		if((typeof this[0] !== 'undefined' && this[0] !== document) || !helper.isFunction(func)){
+			return this;
+		}
+
+		if(isReady){
+			func();
+		}else{
+			document.addEventListener('DOMContentLoaded',func,false);
+		}
+
+		return this;
 
 	};
 
@@ -589,6 +679,8 @@
 
 	/******************* Helper end ******************/
 
+	// 设置原型
+	tQuery.fn = tQuery.prototype;
 
 	window.tQuery = window.$ = tQuery;
 

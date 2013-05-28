@@ -1,32 +1,13 @@
 <!doctype html>
 <head>
 <meta charset="utf-8" />
-<title>tQuery测试</title>
+<title>tQuery 单元测试</title>
 <script src="../src/tQuery.js"></script>
+<script src="./qunit/qunit/qunit.js"></script>
+<link rel="stylesheet" href="./qunit/qunit/qunit.css" />
+<script src="./tests/core.js"></script>
 </head>
 <body>
-	<div>test1</div>
-	<div>test2</div>
-	<div>test3</div>
-	<div>test4</div>
-	<div><span>test5</span></div>
+<div id="qunit"></div>
 </body>
-<script>
-
-~function(){
-
-	var a={a:1,b:2},b={a:21,b:22},c={a:3,c:{a:1,b:[1,2,3]},d:[1,2,3]};
-
-	$.extend(a,c);
-
-	$.extend(true,b,c)
-
-	c.d.push(222);
-	a.c.a=3;
-	console.log(a,b,c);
-
-}();
-
-
-</script>
 </html>

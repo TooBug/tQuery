@@ -132,6 +132,16 @@ test('$.each函数测试',function(){
 
 });
 
+test('DOM操作函数测试',function(){
+
+	ok($('<div></div>').append('<span>1</span>').html() === '<span>1</span>','append字符串测试');
+	ok($('<div></div>').append($('<span>1</span>')).html() === '<span>1</span>','append tQuery对象测试');
+	// ok(test_index === 0,'DOM元素index指向测试');
+	// ok(test_domItem === document.body,'DOM元素each中元素指向测试');
+
+
+});
+
 asyncTest('DOM Ready测试',function(){
 
 	var count = 0;

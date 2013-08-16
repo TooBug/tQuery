@@ -499,6 +499,14 @@
 			source = tQuery(source);
 		}
 
+		this.each(function(){
+
+			this.appendChild(source[0]);
+
+		});
+
+		return this;
+
 	};
 
 	/*********************** DOM End **********************/

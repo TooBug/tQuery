@@ -546,6 +546,51 @@
 
 	/*********************** DOM End **********************/
 
+	/********************** CSS Start *********************/
+
+	// 是否含有指定的class名
+	tQuery.prototype.hasClass = function(className){
+
+		var classList = className.replace(/\./g,'').split(' ');
+		var target = this[0];
+		var ret = true;
+
+		classList.forEach(function(className){
+
+			if(!target.classList.contains(className.replace(/\./g,''))){
+				ret = false;
+			}
+
+		});
+
+		return ret;
+
+	};
+
+
+	// 添加class名
+	tQuery.prototype.addClass = function(className){
+
+		var classList = className.replace(/\./g,'').split(' ');
+
+		this[0].classList.add.apply(this[0].classList,classList);
+
+		return this;
+
+	};
+
+	// 是否含有指定的class名
+	tQuery.prototype.removeClass = function(className){
+
+		var classList = className.replace(/\./g,'').split(' ');
+
+		this[0].classList.remove.apply(this[0].classList,classList);
+
+		return this;
+
+	};
+
+	/*********************** CSS End **********************/
 
 	/********************* Event Start ********************/
 

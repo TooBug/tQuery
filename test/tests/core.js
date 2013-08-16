@@ -143,7 +143,31 @@ test('DOM操作函数测试',function(){
 	ok($('<div><span>1</span></div>').prepend('<span>2</span>').html() === '<span>2</span><span>1</span>','prepend有子对象的情况下插入');
 	ok($('<div></div>').prepend('<span>1</span><span>2</span>').html() === '<span>1</span><span>2</span>','prepend插入多个子元素');
 	ok($('<div><span>3</span></div>').prepend('<span>1</span><span>2</span>').html() === '<span>1</span><span>2</span><span>3</span>','prepend插入多个子元素顺序');
-	console.log($('<div><span>1</span></div>').prepend('<span>2</span>').html());
+
+});
+
+test('CSS操作函数测试',function(){
+
+	var testCss = $('<div class="test1 test2"></div>');
+
+	ok(testCss.hasClass('test1'),'hasClass单个class测试');
+	ok(!testCss.hasClass('test3'),'hasClass单个class负测试');
+	ok(testCss.hasClass('test1 test2'),'hasClass多个class测试');
+	ok(!testCss.hasClass('test1 test3'),'hasClass多个class负测试');
+	ok(testCss.hasClass('test1 .test2'),'hasClass点号容错测试');
+	testCss.addClass('test3');
+	testCss.addClass('.test4');
+	testCss.addClass('test5 .test6');
+	ok(testCss.hasClass('test3'),'addClass单个class测试');
+	ok(testCss.hasClass('test3'),'addClass单个class容错测试');
+	ok(testCss.hasClass('test5 test6'),'addClass多个class容错测试');
+	testCss.removeClass('test3');
+	testCss.removeClass('.test4');
+	testCss.removeClass('test5 .test6');
+	ok(!testCss.hasClass('test3'),'removeClass单个class测试');
+	ok(!testCss.hasClass('test4'),'removeClass单个class容错测试');
+	ok(!testCss.hasClass('test5'),'removeClass多个class容错测试');
+	ok(!testCss.hasClass('test6'),'removeClass多个class容错测试');
 
 });
 

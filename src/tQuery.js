@@ -54,6 +54,16 @@
 
 				if(ifHTMLStrReg.test(selector)){	// DOM字符串
 
+					var domList = helper.parseDOM(selector);
+
+					var tempObj = {
+
+						length:domList.length
+
+					};
+
+					tQuery.extend(tempObj,domList);
+					tQuery.extend(this,tempObj);
 
 				}else{	// 选择器
 
@@ -482,6 +492,15 @@
 
 	};
 
+	// 将DOM（source）插入this
+	tQuery.prototype.append = function(source){
+
+		if(!helper.istQueryObject(source)){
+			source = tQuery(source);
+		}
+
+	};
+
 	/*********************** DOM End **********************/
 
 
@@ -674,6 +693,15 @@
 	helper.isDomList = function(target){
 
 		return target.constructor.name === 'NodeList';
+
+	};
+
+	// 解析DOM字符串
+	helper.parseDOM = function(htmlStr){
+
+		var tempDOM = document.createElement('div');
+		tempDOM.innerHTML = htmlStr;
+		return tempDOM.childNodes;
 
 	};
 

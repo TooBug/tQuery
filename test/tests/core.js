@@ -20,6 +20,8 @@ test('tQuery函数测试',function(){
 	ok(tQuery([]).length === 0,'空数组');
 	ok(tQuery([1,2,3]).length === 3,'非空数组');
 	ok(tQuery({}).length === 1,'对象');
+	ok(tQuery('<div></div>').length === 1,'单个DOM字符串解析')
+	ok(tQuery('<div></div><span></span>').length === 2,'多个DOM字符串解析')
 
 });
 

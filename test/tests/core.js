@@ -138,9 +138,12 @@ test('DOM操作函数测试',function(){
 	ok($('<div></div>').append($('<span>1</span>')).html() === '<span>1</span>','append tQuery对象测试');
 	ok($('<div><span>1</span></div>').append('<span>2</span>').html() === '<span>1</span><span>2</span>','append有子对象的情况下插入');
 	ok($('<div></div>').append('<span>1</span><span>2</span>').html() === '<span>1</span><span>2</span>','append插入多个子元素');
-	// ok(test_index === 0,'DOM元素index指向测试');
-	// ok(test_domItem === document.body,'DOM元素each中元素指向测试');
-
+	ok($('<div></div>').prepend('<span>1</span>').html() === '<span>1</span>','prepend字符串测试');
+	ok($('<div></div>').prepend($('<span>1</span>')).html() === '<span>1</span>','prepend tQuery对象测试');
+	ok($('<div><span>1</span></div>').prepend('<span>2</span>').html() === '<span>2</span><span>1</span>','prepend有子对象的情况下插入');
+	ok($('<div></div>').prepend('<span>1</span><span>2</span>').html() === '<span>1</span><span>2</span>','prepend插入多个子元素');
+	ok($('<div><span>3</span></div>').prepend('<span>1</span><span>2</span>').html() === '<span>1</span><span>2</span><span>3</span>','prepend插入多个子元素顺序');
+	console.log($('<div><span>1</span></div>').prepend('<span>2</span>').html());
 
 });
 

@@ -513,6 +513,37 @@
 
 	};
 
+	// 将DOM（source）插入this，位于所有子元素之前
+	tQuery.prototype.prepend = function(source){
+
+		if(!helper.istQueryObject(source)){
+			source = tQuery(source);
+		}
+
+		this.each(function(){
+
+			var container = this;
+			var containerChildren = container.childNodes;
+			var target;	//原来的第一个子元素
+
+			if(containerChildren.length){
+				target = container.firstChild;
+			}
+
+			source.each(function(){
+				if(target){
+					container.insertBefore(this,target);
+				}else{
+					container.appendChild(this);
+				}
+			})
+
+		});
+
+		return this;
+
+	};
+
 	/*********************** DOM End **********************/
 
 

@@ -501,7 +501,11 @@
 
 		this.each(function(){
 
-			this.appendChild(source[0]);
+			var container = this;
+
+			source.each(function(){
+				container.appendChild(this);
+			})
 
 		});
 

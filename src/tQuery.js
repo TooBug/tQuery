@@ -567,7 +567,6 @@
 
 	};
 
-
 	// 添加class名
 	tQuery.prototype.addClass = function(className){
 
@@ -579,12 +578,34 @@
 
 	};
 
-	// 是否含有指定的class名
+	// 移除class名
 	tQuery.prototype.removeClass = function(className){
 
 		var classList = className.replace(/\./g,'').split(' ');
 
 		this[0].classList.remove.apply(this[0].classList,classList);
+
+		return this;
+
+	};
+
+	// 切换指定的class名
+	tQuery.prototype.toggleClass = function(className,addOrRemove){
+
+		var classList = className.replace(/\./g,'').split(' ');
+
+		if(typeof addOrRemove === 'undefined'){
+			var target = this[0];
+			classList.forEach(function(className){
+				target.classList.toggle(className);
+			});
+		}else{
+			if(addOrRemove){
+				this.addClass(className);
+			}else{
+				this.removeClass(className);
+			}
+		}
 
 		return this;
 

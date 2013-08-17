@@ -169,6 +169,19 @@ test('CSS操作函数测试',function(){
 	ok(!testCss.hasClass('test5'),'removeClass多个class容错测试');
 	ok(!testCss.hasClass('test6'),'removeClass多个class容错测试');
 
+	testCss.toggleClass('test7');
+	ok(testCss.hasClass('test7'),'toggleClass add测试')
+	testCss.toggleClass('test7');
+	ok(!testCss.hasClass('test7'),'toggleClass remove测试')
+
+	testCss.toggleClass('test8 test9');
+	ok(testCss.hasClass('test8'),'toggleClass多个class add测试');
+	console.log(testCss);
+	ok(testCss.hasClass('test9'),'toggleClass多个class add测试');
+	testCss.toggleClass('test8 test9');
+	ok(!testCss.hasClass('test8'),'toggleClass多个class remove测试');
+	ok(!testCss.hasClass('test9'),'toggleClass多个class remove测试');
+
 });
 
 asyncTest('DOM Ready测试',function(){

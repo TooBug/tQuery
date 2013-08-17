@@ -148,8 +148,16 @@ test('DOM操作函数测试',function(){
 	ok(testDom.attr('test1') === 'test','attr读取测试');
 	testDom.attr('test2','test2');
 	ok(testDom.attr('test2') === 'test2','attr写入测试');
+	testDom.attr({
+		test3:'test3'
+	});
+	ok(testDom.attr('test3') === 'test3','attr多属性读写测试');
 	testDom.prop('test1','test11');
 	ok(testDom.prop('test1') === 'test11','prop读写测试');
+	testDom.prop({
+		test3:'test3'
+	});
+	ok(testDom.prop('test3') === 'test3','prop多属性读写测试');
 	ok(testDom.attr('test1') === 'test','prop读写不影响attr测试');
 
 
@@ -185,7 +193,6 @@ test('CSS操作函数测试',function(){
 
 	testCss.toggleClass('test8 test9');
 	ok(testCss.hasClass('test8'),'toggleClass多个class add测试');
-	console.log(testCss);
 	ok(testCss.hasClass('test9'),'toggleClass多个class add测试');
 	testCss.toggleClass('test8 test9');
 	ok(!testCss.hasClass('test8'),'toggleClass多个class remove测试');

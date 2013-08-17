@@ -495,10 +495,27 @@
 	// 获取（写入）DOM的property
 	tQuery.prototype.prop = function(key,val){
 
-		if(typeof val === 'undefined'){
+		var propMap;
+		if(helper.isPlainObject(key)){
+			propMap = key;
+		}
+		if(!propMap && typeof val === 'undefined'){
 			return this[0][key];
 		}else{
-			this[0][key] = val;
+
+			var target = this;
+
+			if(!propMap){
+				propMap = {}
+				propMap[key] = val;
+			}
+
+			tQuery.each(propMap,function(key,val){
+
+				target[0][key] = val;
+
+			});
+
 			return this;
 		}
 
@@ -507,10 +524,27 @@
 	// 获取（写入）DOM的attribute
 	tQuery.prototype.attr = function(key,val){
 
-		if(typeof val === 'undefined'){
+		var attrMap;
+		if(helper.isPlainObject(key)){
+			attrMap = key;
+		}
+		if(!attrMap && typeof val === 'undefined'){
 			return this[0].getAttribute(key);
 		}else{
-			this[0].setAttribute(key,val);
+
+			var target = this;
+
+			if(!attrMap){
+				attrMap = {};
+				attrMap[key] = val;
+			}
+
+			tQuery.each(attrMap,function(key,val){
+
+				target[0].setAttribute(key,val);
+
+			});
+
 			return this;
 		}
 

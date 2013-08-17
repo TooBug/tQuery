@@ -492,6 +492,30 @@
 
 	};
 
+	// 获取（写入）DOM的property
+	tQuery.prototype.prop = function(key,val){
+
+		if(typeof val === 'undefined'){
+			return this[0][key];
+		}else{
+			this[0][key] = val;
+			return this;
+		}
+
+	};
+
+	// 获取（写入）DOM的attribute
+	tQuery.prototype.attr = function(key,val){
+
+		if(typeof val === 'undefined'){
+			return this[0].getAttribute(key);
+		}else{
+			this[0].setAttribute(key,val);
+			return this;
+		}
+
+	};
+
 	// 将DOM（source）插入this
 	tQuery.prototype.append = function(source){
 

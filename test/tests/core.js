@@ -144,6 +144,15 @@ test('DOM操作函数测试',function(){
 	ok($('<div></div>').prepend('<span>1</span><span>2</span>').html() === '<span>1</span><span>2</span>','prepend插入多个子元素');
 	ok($('<div><span>3</span></div>').prepend('<span>1</span><span>2</span>').html() === '<span>1</span><span>2</span><span>3</span>','prepend插入多个子元素顺序');
 
+	var testDom = $('<div test1="test"></div>');
+	ok(testDom.attr('test1') === 'test','attr读取测试');
+	testDom.attr('test2','test2');
+	ok(testDom.attr('test2') === 'test2','attr写入测试');
+	testDom.prop('test1','test11');
+	ok(testDom.prop('test1') === 'test11','prop读写测试');
+	ok(testDom.attr('test1') === 'test','prop读写不影响attr测试');
+
+
 });
 
 test('CSS操作函数测试',function(){

@@ -165,7 +165,7 @@ test('DOM操作函数测试',function(){
 
 test('CSS操作函数测试',function(){
 
-	var testCss = $('<div class="test1 test2"></div>');
+	var testCss = $('<div class="test1 test2" style="line-height:10px;position:relative"></div>');
 
 	ok(testCss.hasClass('test1'),'hasClass单个class测试');
 	ok(!testCss.hasClass('test3'),'hasClass单个class负测试');
@@ -197,6 +197,25 @@ test('CSS操作函数测试',function(){
 	testCss.toggleClass('test8 test9');
 	ok(!testCss.hasClass('test8'),'toggleClass多个class remove测试');
 	ok(!testCss.hasClass('test9'),'toggleClass多个class remove测试');
+
+
+	ok(testCss.css('position') === 'relative','css读简单属性测试');
+	ok(testCss.css('line-height') === '10px','css读带横杠属性测试');
+
+	testCss.css('color','#123');
+	testCss.css({
+		width:'10px',
+		height:'10px'
+	});
+	ok(testCss.css('color') === 'rgb(17, 34, 51)','css写入单个简单属性测试');
+	ok(testCss.css('width') === '10px','css写入多个简单属性测试');
+
+	testCss.css('font-size','12px');
+	testCss.css({
+		'z-index':'10'
+	});
+	ok(testCss.css('font-size') === '12px','css写入单个带横框属性测试');
+	ok(testCss.css('z-index') === '10','css写入多个带横框属性测试');
 
 });
 

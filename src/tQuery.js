@@ -686,9 +686,40 @@
 
 	};
 
-	// TODO:获取（设置）元素指定的CSS
-	tQuery.prototype.css = function(){
+	// 获取（设置）元素指定的CSS
+	tQuery.prototype.css = function(key,val){
 
+		var replaceKey = function(string){
+
+			return string.replace(/-([a-z])/g,function(string,char){
+				return char.toUpperCase();
+			})
+
+		};
+
+		var styleMap;
+		if(helper.isPlainObject(key)){
+			styleMap = key;
+		}
+		if(!styleMap && typeof val === 'undefined'){
+			return this[0].style[replaceKey(key)];
+		}else{
+
+			var target = this;
+
+			if(!styleMap){
+				styleMap = {}
+				styleMap[key] = val;
+			}
+
+			tQuery.each(styleMap,function(key,val){
+
+				target[0].style[replaceKey(key)] = val;
+
+			});
+
+			return this;
+		}
 	};
 
 	// TODO:获取（设置）元素的宽度

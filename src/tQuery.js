@@ -15,6 +15,7 @@
 
 	// 存储window.$以便后续可以用noConfict解救出来
 	var _$ = window.$;
+	var _tQuery = window.tQuery;
 
 	/********************* Core Start *********************/
 
@@ -237,6 +238,10 @@
 
 	};
 
+	// TODO:Deferred对象
+	tQuery.Deferred = function(){
+
+	};
 
 	// tQuery对象中的DOM遍历
 	tQuery.each = function(domList,callback){
@@ -284,6 +289,16 @@
 
 	// 空方法
 	tQuery.noop = function(){};
+
+	// 释放$变量
+	tQuery.noConflict = function(releasetQuery){
+
+		window.$ = _$;
+		if(releasetQuery){
+			window.tQuery = _tQuery;
+		}
+
+	};
 	
 	// tQuery原型中的each方法
 	tQuery.prototype.each = function(callback){
@@ -300,9 +315,11 @@
 		}
 
 		if(isReady){
-			func();
+			func(tQuery);
 		}else{
-			document.addEventListener('DOMContentLoaded',func,false);
+			document.addEventListener('DOMContentLoaded',function(){
+				func(tQuery);
+			},false);
 		}
 
 		return this;
@@ -666,6 +683,21 @@
 		}
 
 		return this;
+
+	};
+
+	// TODO:获取（设置）元素指定的CSS
+	tQuery.prototype.css = function(){
+
+	};
+
+	// TODO:获取（设置）元素的宽度
+	tQuery.prototype.width = function(){
+
+	};
+
+	// TODO:获取（设置）元素的宽度
+	tQuery.prototype.height = function(){
 
 	};
 

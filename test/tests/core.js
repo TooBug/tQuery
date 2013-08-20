@@ -200,6 +200,19 @@ test('CSS操作函数测试',function(){
 
 });
 
+test('杂项函数测试',function(){
+
+	tQuery.noConflict();
+	ok(typeof $ === 'undefined','noConflict释放$');
+	$ = tQuery;
+
+	var test = tQuery;
+	tQuery.noConflict(true);
+	ok(typeof tQuery === 'undefined','noConflict释放tQuery');
+	$ = tQuery = test;
+
+});
+
 asyncTest('DOM Ready测试',function(){
 
 	var count = 0;
@@ -218,6 +231,10 @@ asyncTest('DOM Ready测试',function(){
 	tQuery(function(){
 		count++;
 		ok(count === 3,'直接传函数');
+	});
+
+	tQuery(function($){
+		ok($ === tQuery,'测试DOM Ready回调的$指向');
 		stop();
 	});
 

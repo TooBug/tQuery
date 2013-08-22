@@ -318,6 +318,44 @@ asyncTest('Deferred对象测试',function(){
 		start();
 	});
 
+	stop();
+	tQuery.when(function(){
+		var dfd = $.Deferred();
+		setTimeout(function(){
+			dfd.resolve('resolved');
+		})		
+		return dfd;
+	}).done(function(data){
+		ok(data === 'resolved','resolve以及done测试');
+		start();
+	}).always(function(data){
+		ok(data === 'resolved','always成功测试');
+		start();
+	});
+
+	stop();
+	tQuery.when(function(){
+		var dfd = $.Deferred();
+		setTimeout(function(){
+			dfd.reject('error');
+		})		
+		return dfd;
+	}).fail(function(data){
+		ok(data === 'error','reject以及fail测试');
+		start();
+	}).always(function(data){
+		ok(data === 'error','always失败测试');
+		start();
+	});
+
+	/*stop();
+	tQuery.when(function(){
+		var dfd = $.Deferred();
+		setTimeout(function(){
+			dfd.reject('error');
+		})		
+		return dfd;
+	});*/
 
 
 });

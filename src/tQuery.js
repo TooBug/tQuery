@@ -307,8 +307,6 @@
 		var whenArguments = arguments;
 		var fillResult = function(index,result){
 
-			console.log('fill');
-
 			resultList[index] = result;
 
 			resultCount++;

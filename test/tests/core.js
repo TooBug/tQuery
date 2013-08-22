@@ -273,6 +273,52 @@ asyncTest('Deferred对象测试',function(){
 		start();
 	});
 
+	stop();
+	tQuery.when(function(){
+		var dfd = tQuery.Deferred();
+		setTimeout(function(){
+			dfd.resolve(1);
+		},1000);
+		return dfd;
+	},function(){
+		var dfd = tQuery.Deferred();
+		setTimeout(function(){
+			dfd.resolve(2);
+		},1000);
+		return dfd;
+	}).then(function(data1,data2){
+		ok(data1 === 1,'when传多个异步函数时数据正确性测试1');
+		ok(data2 === 2,'when传多个异步函数时数据正确性测试2');
+		start();
+	});
+
+	stop();
+	tQuery.when(function(){
+		return 1;
+	},function(){
+		var dfd = tQuery.Deferred();
+		setTimeout(function(){
+			dfd.resolve(2);
+		},1000);
+		return dfd;
+	}).then(function(data1,data2){
+		ok(data1 === 1,'when传同步异步混合函数时数据正确性测试1');
+		ok(data2 === 2,'when传同步异步混合函数时数据正确性测试2');
+		start();
+	});
+
+	stop();
+	tQuery.when(function(){
+		return 1;
+	},function(){
+		return 2;
+	}).then(function(data1,data2){
+		ok(data1 === 1,'when传多个同步函数时数据正确性测试1');
+		ok(data2 === 2,'when传多个同步函数时数据正确性测试2');
+		start();
+	});
+
+
 
 });
 

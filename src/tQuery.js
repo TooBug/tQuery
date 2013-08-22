@@ -276,12 +276,15 @@
 		},
 		done:function(callback){
 			this._doneCallback = callback;
+			return this;
 		},
 		fail:function(callback){
 			this._failCallback = callback;
+			return this;
 		},
 		always:function(callback){
 			this._alwaysCallback = callback;
+			return this;
 		},
 		promise:function(){
 			return this;
@@ -289,6 +292,7 @@
 		then:function(doneCallback,failCallback){
 			this._doneCallback = doneCallback;
 			this._failCallback = failCallback;
+			return this;
 		},
 		_tQueryDeferred:1
 

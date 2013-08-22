@@ -238,9 +238,117 @@
 
 	};
 
-	// TODO:Deferred对象
+	// Deferred对象
 	tQuery.Deferred = function(){
 
+		if(!(this instanceof tQuery.Deferred)){
+			return new tQuery.Deferred();
+		}
+
+		this._status = 'pending';
+		this._doneCallback;
+		this._failCallback;
+		this._alwaysCallback;
+		this._thenCallback;
+
+		this.constructor = tQuery.Deferred;
+
+		return this;
+
+	};
+
+	tQuery.Deferred.prototype = {
+
+		resolve:function(data){
+			if(this._status !== 'pending') return;
+			this._status = 'resolved';
+			if(!helper.isArray(data)){
+				data = [data];
+			}
+			this._doneCallback && this._doneCallback.apply(null,data);
+			this._alwaysCallback && this._alwaysCallback.apply(null,data);
+		},
+		reject:function(err){
+			if(this._status !== 'pending') return;
+			this._status = 'rejected';
+			this._failCallback && this._failCallback(err);
+			this._alwaysCallback && this._alwaysCallback(err);
+		},
+		done:function(callback){
+			this._doneCallback = callback;
+		},
+		fail:function(callback){
+			this._failCallback = callback;
+		},
+		always:function(callback){
+			this._alwaysCallback = callback;
+		},
+		promise:function(){
+			return this;
+		},
+		then:function(doneCallback,failCallback){
+			this._doneCallback = doneCallback;
+			this._failCallback = failCallback;
+		},
+		_tQueryDeferred:1
+
+	};
+
+	// 开始异步方法，返回Deferred对象
+	tQuery.when = function(){
+
+		var dfd = tQuery.Deferred();
+		var resultList = [];
+		var resultCount = 0;
+		var whenArguments = arguments;
+		var fillResult = function(index,result){
+
+			console.log('fill');
+
+			resultList[index] = result;
+
+			resultCount++;
+
+			if(resultCount === whenArguments.length){
+
+				dfd.resolve(resultList);
+
+			}
+
+		};
+
+		Array.prototype.forEach.call(arguments,function(argument,index){
+
+			var tempResult;
+
+			if(typeof argument !== 'function'){
+
+				setTimeout(function(){
+					fillResult(index,argument);
+				},0);
+
+			}else{
+
+				tempResult = argument();
+				if(tempResult && tempResult._tQueryDeferred){
+
+					tempResult.done(function(result){
+
+						fillResult(index,result);
+
+					});
+
+				}else{
+					setTimeout(function(){
+						fillResult(index,tempResult);
+					},0);
+				}
+
+			}
+
+		});
+
+		return dfd;
 	};
 
 	// tQuery对象中的DOM遍历

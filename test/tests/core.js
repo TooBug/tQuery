@@ -232,6 +232,50 @@ test('杂项函数测试',function(){
 
 });
 
+asyncTest('Deferred对象测试',function(){
+
+	ok(typeof tQuery.Deferred === 'function','Deferred构造函数存在性测试');
+	var test1 = new $.Deferred();
+	var test2 = $.Deferred();
+	ok(test1.constructor === tQuery.Deferred,'带new初始化测试');
+	ok(test2.constructor === tQuery.Deferred,'不带new初始化测试');
+	ok(test1._status === 'pending','初始状态测试');
+	ok(typeof test1.done === 'function','原型函数存在性测试');
+	ok(typeof test1.done === 'function','原型函数存在性测试');
+
+	var testVal;
+	var testTime;
+
+	tQuery.when(1).then(function(data){
+		testVal = data;
+		ok(testVal === 1,'when传基本数据时数据正确性测试');
+		start();
+	});
+
+	stop();
+	tQuery.when(function(){return 2}).then(function(data){
+		testVal = data;
+		ok(testVal === 2,'when传同步函数时数据正确性测试');
+		start();
+	});
+
+	stop();
+	tQuery.when(function(){
+		var startTime = +new Date();
+		var dfd = tQuery.Deferred();
+		setTimeout(function(){
+			dfd.resolve(+new Date() - startTime);
+		},1000);
+		return dfd;
+	}).then(function(data){
+		testVal = data;
+		ok(testVal >= 1000,'when传异步函数时异步性和数据正确性测试');
+		start();
+	});
+
+
+});
+
 asyncTest('DOM Ready测试',function(){
 
 	var count = 0;

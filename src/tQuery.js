@@ -1,7 +1,7 @@
 /*!
 *
 * tQuery
-* https://github.com/TooooBug/tQuery
+* https://github.com/TooBug/tQuery
 * 
 * @Author TooBug 
 * @Version 0.0.1
